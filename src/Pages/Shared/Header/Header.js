@@ -1,16 +1,47 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../../../Contexts/AuthProvider/AuthProvider';
 import LeftSideNav from '../LeftSideNav/LeftSideNav';
+import Image from 'react-bootstrap/Image';
+import { FaUserAlt } from 'react-icons/fa';
+import { Button } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 const Header = () => {
+
+    const { user, handleSignOut } = useContext(AuthContext);
+    console.log(user);
+
+
+    const userSignOut = () => {
+        handleSignOut()
+        .then(() => {
+            // Swal.fire(
+            //     'Good job!',
+            //     'Log out Done',
+            //     'success'
+            // );
+        })
+
+        .catch(error => {
+            console.error(error)
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Logout Failed!'
+            })
+        })
+    }
+
     return (
         <div>
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" className='mb-4'>
                 <Container>
-                    <Navbar.Brand href="#home">News Portal</Navbar.Brand>
+                    <Navbar.Brand ><Link to='/'>News Portal</Link></Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
@@ -29,9 +60,31 @@ const Header = () => {
                             </NavDropdown>
                         </Nav>
                         <Nav>
-                            <Nav.Link href="#deets">More deets</Nav.Link>
+                            {/* <Nav.Link href="#deets">More deets</Nav.Link> */}
                             <Nav.Link eventKey={2} href="#memes">
-                                Dank memes
+                                {
+                                    user?.uid ?
+                                        <div className='d-flex align-items-center'>
+                                            <p className='me-3 my-auto' style={{ color: "goldenrod" }}>Welcome, {user?.displayName}
+                                            </p>
+                                            {
+                                                user?.photoURL ?
+                                                    <Image roundedCircle src={user?.photoURL} style={{ height: "30px" }} >
+                                                    </Image>
+                                                    :
+                                                    <FaUserAlt className='fs-3 rounded-4'></FaUserAlt>
+                                            }
+
+                                            <Link to='/'><button onClick={userSignOut} className='btn btn-outline-danger ms-3'>Logout</button></Link>
+                                            
+                                        </div>
+                                        :
+                                        <>
+                                            <Link className='me-2' to='/login'>Login</Link>
+                                            <Link to='/register' className='me-2'>Register</Link>
+                                            <FaUserAlt className='fs-3 rounded-4 ms-2'></FaUserAlt>
+                                        </>
+                                }
                             </Nav.Link>
                         </Nav>
                         <div className='d-lg-none d-block'>
