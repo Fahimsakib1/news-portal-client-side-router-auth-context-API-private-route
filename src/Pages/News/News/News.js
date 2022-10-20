@@ -11,6 +11,7 @@ const News = () => {
     const { details, image_url, title, author, rating, category_id } = news;
     const { name, published_date } = news.author
 
+    
     return (
         <div>
             <Card className='mb-5'>
@@ -26,7 +27,7 @@ const News = () => {
                 </div>
                 <Card.Body>
                     <Card.Text>
-                        <p>{details}</p>
+                        <span>{details}</span>
                     </Card.Text>
                 </Card.Body>
                 <div className='mx-auto mb-4'>

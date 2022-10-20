@@ -1,15 +1,17 @@
 import React, { createContext, useEffect, useState } from 'react';
-import {createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile} from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import app from '../../Firebase/Firebase.config';
+
+
 export const AuthContext = createContext();
 const auth = getAuth(app);
 
 
 
-const AuthProvider = ({children}) => {
+const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    
+
     const providerLogin = (provider) => {
         setLoading(true)
         return signInWithPopup(auth, provider);
@@ -29,28 +31,46 @@ const AuthProvider = ({children}) => {
         return signInWithEmailAndPassword(auth, email, password);
     }
 
-    const updateUserProfile = (name, photo) => {
+    // const updateUserProfile = (name, photo) => {
+    //     setLoading(true);
+    //     return updateProfile(auth.currentUser, {
+    //         displayName: name,
+    //         photoURL: photo
+    //     })
+    // }
+
+
+    const updateUserProfile = (profile) => {
         setLoading(true);
-        return updateProfile(auth.currentUser, {
-            displayName: name,
-            photoURL: photo
-        })
+        return updateProfile(auth.currentUser, profile)
     }
 
-    useEffect( () => {
+
+    const verifyEmail = () => {
+        return sendEmailVerification(auth.currentUser);
+    }
+
+
+
+    useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-            console.log("Inside Auth State Changed User", currentUser);
+            if(currentUser === null || currentUser.emailVerified){
+                setUser(currentUser);
+                console.log("Inside Auth State Changed User", currentUser);
+            }
             setLoading(false);
-        })
+        });
+
         return () => unsubscribe();
+
     }, [])
 
-    
-    const AuthInfo = {user, providerLogin, setUser, loading, handleSignOut, createUser, userLogin, updateUserProfile};
-    
+
+    const AuthInfo = { user, providerLogin, setUser, loading, handleSignOut, createUser, userLogin, updateUserProfile, verifyEmail, setLoading };
+
+
     return (
-        <AuthContext.Provider value = {AuthInfo}>
+        <AuthContext.Provider value={AuthInfo}>
             {children}
         </AuthContext.Provider>
     );

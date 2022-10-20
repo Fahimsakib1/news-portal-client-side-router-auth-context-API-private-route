@@ -39,14 +39,14 @@ const NewsSummaryCard = ({ news }) => {
                     <Card.Text>
                         {
 
-                            details.length > 200 ? <p>{details.slice(0, 200) + '...'} <Link to={`/news/${_id}`}>Read More</Link></p> : <p>{details}</p>
+                            details.length > 200 ? <span>{details.slice(0, 200) + '...'} <Link to={`/news/${_id}`}>Read More</Link></span> : <span>{details}</span>
 
                         }
                     </Card.Text>
                 </Card.Body>
                 <Card.Footer className="text-muted d-flex justify-content-between align-items-center">
 
-                    <div className='d-flex justify-content-between align-items-center'> 
+                    <div className='d-flex justify-content-between align-items-center'>
                         <FaStar className='text-warning'></FaStar>
                         <p className='my-auto ms-1'>{rating.number}</p>
                     </div>
@@ -55,7 +55,7 @@ const NewsSummaryCard = ({ news }) => {
                         <FaEye></FaEye>
                         <p className='my-auto ms-1'>{total_view}</p>
                     </div>
-                
+
                 </Card.Footer>
             </Card>
         </div>
