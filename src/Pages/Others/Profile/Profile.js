@@ -2,23 +2,63 @@ import React, { useContext, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { AuthContext } from '../../../Contexts/AuthProvider/AuthProvider';
+import Swal from 'sweetalert2';
+import {useNavigate} from 'react-router-dom'
 
 const Profile = () => {
     
-    const {user} = useContext(AuthContext)
+    const {user, updateUserProfile, loading} = useContext(AuthContext)
     const [name, setName] = useState(user.displayName);
+    const [photoURL, setPhotoURL] = useState(user.photoURL);
     const photoURLRef = useRef(user.photoURL);
     
+    const navigate = useNavigate();
     
     const handleSubmit = (event) => {
         event.preventDefault();
         photoURLRef.current.focus();
+        console.log("User From Profile Component",user);
         console.log(name, photoURLRef.current.value)
+        handleUpdateUserProfile(name, photoURL);
     }
 
     const handleNameChange = (event) => {
         setName(event.target.value)
     }
+
+    const handlePhotoURLChange = (event) => {
+        setPhotoURL(event.target.value)
+    }
+
+    const handleUpdateUserProfile = (name, photoURL) => {
+        const profile = {
+            displayName: name,
+            photoURL: photoURL
+        }
+        updateUserProfile(profile)
+            .then(() => { 
+                //const user = result.user;
+                //console.log(user)
+                Swal.fire(
+                    'Great',
+                    "User name and photo updated successfully",
+                    'success'
+                )
+                navigate('/login')
+            })
+
+            .catch(error => {
+                
+                console.error(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Update Failed'
+                })
+            })
+    }
+
+
 
 
     return (
@@ -43,7 +83,8 @@ const Profile = () => {
                     <Form.Label>Photo URL</Form.Label>
                     <Form.Control 
                     ref={photoURLRef}
-                    defaultValue={user?.photoURL}
+                    onChange={handlePhotoURLChange}
+                    defaultValue={photoURL}
                     type="text" 
                     placeholder="Add Photo URL" />
                 </Form.Group>

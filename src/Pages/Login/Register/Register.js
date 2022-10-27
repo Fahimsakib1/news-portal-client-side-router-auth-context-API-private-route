@@ -5,16 +5,20 @@ import { AuthContext } from '../../../Contexts/AuthProvider/AuthProvider';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import useTitle from '../../../Hooks/useTitle';
 
 const Register = () => {
 
+    useTitle('Register')
 
     const { createUser, updateUserProfile, verifyEmail } = useContext(AuthContext);
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
-
     const [accepted, setAccepted] = useState(false);
+
+    const navigate = useNavigate();
 
 
     const handleRegister = (event) => {
@@ -41,8 +45,9 @@ const Register = () => {
                     `${name} You are Successfully Registered`,
                     'success'
                 )
+                
 
-                // updateUserProfile(name, photo);
+                // updateUserProfile(name, photo); 
                 handleUpdateUserProfile(name, photo);
                 handleEmailVerification();
                 toast.success('A verification mail has been sent to your email address. please verify your email.');
@@ -54,6 +59,7 @@ const Register = () => {
                 //     console.error("Update Profile Error: ", error)
                 // })
                 event.target.reset();
+                navigate('/login')
             })
 
 
@@ -74,7 +80,7 @@ const Register = () => {
 
 
     // const handleAccepted = (event) => {
-    //     const check = (event.target.checked)
+    //     const check = event.target.checked
     //     if (check === true) {
     //         setAccepted(true)
     //     }
@@ -98,6 +104,7 @@ const Register = () => {
             .catch(error => console.error(error))
     }
 
+    
     const handleEmailVerification = () => {
         verifyEmail()
             .then((result) => {
@@ -109,6 +116,7 @@ const Register = () => {
 
 
     return (
+        
         <Form onSubmit={handleRegister} className='mb-5'>
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -144,7 +152,6 @@ const Register = () => {
             <Button variant="primary" type="submit" disabled={!accepted}>
                 Register
             </Button>
-
 
             <div className='text-danger'>
                 {

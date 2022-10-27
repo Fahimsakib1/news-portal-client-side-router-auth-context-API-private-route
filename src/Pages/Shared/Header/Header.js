@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 const Header = () => {
 
     const { user, handleSignOut } = useContext(AuthContext);
-    console.log(user);
+    console.log("User From Header" ,user);
 
 
     const userSignOut = () => {
@@ -39,6 +39,7 @@ const Header = () => {
             })
     }
 
+    
     return (
         <div>
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" className='mb-4'>

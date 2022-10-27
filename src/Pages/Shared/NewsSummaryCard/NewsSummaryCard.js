@@ -3,9 +3,13 @@ import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
 import Image from 'react-bootstrap/Image';
 import { FaEye, FaRegBookmark, FaShareAlt, FaStar } from "react-icons/fa";
+import useTitle from '../../../Hooks/useTitle';
 
 const NewsSummaryCard = ({ news }) => {
     //console.log(news)
+    
+    useTitle('News Summary')
+    
     const { _id, category_id, title, rating, details, total_view, thumbnail_url, author, image_url } = news;
 
     const { name, published_date, img } = news.author;

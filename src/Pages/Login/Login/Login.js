@@ -5,10 +5,13 @@ import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../../../Contexts/AuthProvider/AuthProvider';
+import useTitle from '../../../Hooks/useTitle';
 
 
 
 const Login = () => {
+    
+    useTitle('Login')
     
     const {userLogin, setLoading} = useContext(AuthContext);
 
@@ -37,7 +40,8 @@ const Login = () => {
             event.target.reset();
             setSuccess(true);
             setError('')
-            
+            // navigate(from, {replace: true})
+
             if(user.emailVerified === true){
                 navigate(from, {replace: true})
             }
@@ -45,6 +49,9 @@ const Login = () => {
                 toast.error("Email is not verified yet. Please Verify. ")
             }
         })
+
+
+
 
         .catch(error => {
             console.error(error);
